@@ -10,6 +10,11 @@ class Config:
         
     def get_token(self):
         return self.config.get('settings', 'bot_token')
+    
+    def set_token(self, token):
+        self.config.set('settings', 'bot_token', str(token))
+        with open(self.config_file, 'w') as configfile:
+            self.config.write(configfile)
         
 config = Config(r'fullstack\bot\config.ini')
 
