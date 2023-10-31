@@ -1,1 +1,3 @@
 venv/
+fullstack/db.sqlite3
+*.pyc
