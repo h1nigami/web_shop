@@ -13,3 +13,5 @@ class DataBase:
                 name TEXT,
                 cost INTEGER,)""")
             await db.commit()
+            
+db = DataBase('db.sqlite3')
