@@ -5,3 +5,4 @@ fullstack/db.sqlite3
 *migrations
 *.ini
 secret.py
+*.jpg
