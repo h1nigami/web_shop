@@ -1,10 +1,15 @@
 import configparser
+import os
+from pathlib import Path
 
 class Config:
-    def __init__(self, config_name):
-        self.config_name = config_name
+    def __init__(self, config_file):
+        self.config_file = config_file
         self.config = configparser.ConfigParser()
-        self.config.read(self.config_name)
+        self.config.read(self.config_file, encoding='utf-8')
         
-    def get(self, section, option):
-        return self.config.get(section, option)
+    def get_token(self):
+        return self.config.get('settings', 'bot_token')
+        
+config = Config(r'fullstack\bot\config.ini')
+
