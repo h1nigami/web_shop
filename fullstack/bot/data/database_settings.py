@@ -12,3 +12,4 @@ class DataBase:
             await db.execute("""CREATE TABLE IF NOT EXISTS products(
                 name TEXT,
                 cost INTEGER,)""")
+            await db.commit()
