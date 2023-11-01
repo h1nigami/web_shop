@@ -28,7 +28,7 @@ class DataBase:
             async with db.execute("SELECT * FROM users WHERE username = ?", (username,)) as cursor:
                 user = await cursor.fetchone()
                 return user
-    #работа с ботами        
+    #работа с ботами (только в основной бд)        
     async def get_token(self, owner_id):
         async with aiosqlite.connect(self.db_name) as db:
             async with db.execute("SELECT token FROM backend_api_bots WHERE owner_id = ?", (owner_id,)) as cursor:
@@ -36,3 +36,4 @@ class DataBase:
                 return token
             
 db = DataBase(r'fullstack\db.sqlite3')
+bot_db = DataBase(r'fullstack/bot/db.sqlite3')
