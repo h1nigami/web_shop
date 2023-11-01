@@ -5,6 +5,7 @@ class Bots(models.Model):
     owner = models.OneToOneField(User, verbose_name=("Владелец"), on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name=("Название"))
     token = models.CharField(max_length=100, verbose_name=("Токен"))
+    privetstvie = models.TextField(verbose_name=("Приветствие"), null=True)
     class Meta:
         verbose_name = ("Бот")
         verbose_name_plural = ("Боты")
