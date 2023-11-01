@@ -8,16 +8,19 @@ class DataBase:
         async with aiosqlite.connect(self.db_name) as db:
             await db.execute("""CREATE TABLE IF NOT EXISTS users(
                 id INTEGER PRIMARY KEY,
-                username TEXT,)""")
+                username TEXT)""")
             await db.execute("""CREATE TABLE IF NOT EXISTS products(
                 name TEXT,
-                cost INTEGER,)""")
+                cost INTEGER)""")
             await db.commit()
             
     async def create_user(self, tg_id, username):
-        async with aiosqlite.connect(self.db_name) as db:
-            await db.execute("INSERT INTO users VALUES (?, ?)", (tg_id, username))
-            await db.commit()
+        try:
+            async with aiosqlite.connect(self.db_name) as db:
+                await db.execute("INSERT INTO users VALUES (?, ?)", (tg_id, username))
+                await db.commit()
+        except aiosqlite.IntegrityError:
+            pass
     
     async def get_user(self, username):
         async with aiosqlite.connect(self.db_name) as db:
