@@ -3,8 +3,6 @@ from aiogram import F, Router
 from aiogram.filters import Command
 from data import config, db
 
-from aiogram.fsm import FSMContext
-
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -14,5 +12,6 @@ router = Router()
 @dp.message(Command(commands=['start']))
 async def startup(message:types.Message):
     await db.create_user(tg_id=message.from_user.id, username=message.from_user.username)
-    await bot.send_photo(chat_id=message.from_user.id, photo=open(r'src/магазин.jpg'), caption='Добро пожаловать в магазин')
+    photo = types.FSInputFile(path=r'fullstack/bot/src/img/магазин.jpg')
+    await bot.send_photo(photo=photo, caption='Добро пожаловать в наш магазин!', chat_id=message.from_user.id)
     
