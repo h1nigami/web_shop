@@ -56,12 +56,12 @@ class DataBase:
             
     async def create_order(self, tg_id:int, order:str):
         pre_orders = await self.get_order_history(tg_id)
-        if pre_orders is None:
+        if len(pre_orders) == 0:
             order = order
         else:
             order = pre_orders + ':' + order
         async with aiosqlite.connect(self.db_name) as db:
-            await db.execute(F"UPDATE users SET orders = {order} WHERE id = {tg_id}")
+            await db.execute("UPDATE users SET orders = ? WHERE id = ?", (order, tg_id))
             await db.commit()
             
     #работа с категориями
