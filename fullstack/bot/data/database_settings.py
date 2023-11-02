@@ -1,4 +1,5 @@
 import aiosqlite
+import datetime
 
 class DataBase:
     def __init__(self, db_name):
@@ -8,17 +9,22 @@ class DataBase:
         async with aiosqlite.connect(self.db_name) as db:
             await db.execute("""CREATE TABLE IF NOT EXISTS users(
                 id INTEGER PRIMARY KEY,
-                username TEXT)""")
+                username TEXT,
+                balance INTEGER,
+                discard INTEGER,
+                register_date TEXT,
+                orders TEXT DEFAULT NULL)""")
             await db.execute("""CREATE TABLE IF NOT EXISTS products(
                 name TEXT,
-                cost INTEGER)""")
+                cost INTEGER,
+                category TEXT)""")
             await db.commit()
     
     #работа с юзерами        
     async def create_user(self, tg_id, username):
         try:
             async with aiosqlite.connect(self.db_name) as db:
-                await db.execute("INSERT INTO users VALUES (?, ?)", (tg_id, username))
+                await db.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", (tg_id, username, 0, 0, str(datetime.datetime.now()), None))
                 await db.commit()
         except aiosqlite.IntegrityError:
             pass
