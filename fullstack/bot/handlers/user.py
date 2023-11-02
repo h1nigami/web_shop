@@ -25,4 +25,4 @@ async def startup(message:types.Message):
     
 @dp.callback_query(F.data == 'catalog')
 async def catalog(callback: types.callback_query):
-    await bot.send_message(chat_id=callback.from_user.id, text='Выберит категорию товара', reply_markup=catalog_menu())
+    await bot.send_message(chat_id=callback.from_user.id, text='Выберите категорию товара', reply_markup=catalog_menu())
