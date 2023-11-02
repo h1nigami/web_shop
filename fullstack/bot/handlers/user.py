@@ -23,12 +23,6 @@ async def startup(message:types.Message):
                         parse_mode=ParseMode.HTML,
                         reply_markup=main_menu())
     
-@dp.inline_query(F.data == 'catalog')
-async def catalog(inline_query: types.InlineQuery):
-    await bot.answer_inline_query(inline_query.id, results=[InlineQueryResultArticle(
-        id='1',
-        title='Каталог товаров',
-        input_message_content=types.InputTextMessageContent(
-            message_text='Каталог товаров'
-        )
-    )])
+@dp.callback_query(F.data == 'catalog')
+async def catalog(callback: types.callback_query):
+    await bot.send_message(chat_id=callback.from_user.id, text='Выберит категорию товара', reply_markup=catalog_menu())
