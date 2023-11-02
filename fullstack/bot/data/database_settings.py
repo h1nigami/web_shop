@@ -48,8 +48,11 @@ class DataBase:
         '''
         async with aiosqlite.connect(self.db_name) as db:
             async with db.execute("SELECT orders FROM users WHERE id = ?", (tg_id,)) as cursor:
-                order = await cursor.fetchone()
-                return order
+                orders = await cursor.fetchone()
+                order = [order for order in orders]
+                for word in order:
+                    result = ''.join(word)
+                return result
             
     async def create_order(self, tg_id:int, order:str):
         pre_orders = await self.get_order_history(tg_id)
