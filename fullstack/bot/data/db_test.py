@@ -6,9 +6,9 @@ async def main():
     result = '123:321'
     try:
         assert orders == result
-        print(f'{orders} == {result}')
+        print(f'Test passed\n{orders} == {result}')
     except AssertionError:
-        print(f'{orders} != {result}')
+        print(f'Test failed\n{orders} != {result}')
     
 if __name__ == '__main__':
     asyncio.run(main())
