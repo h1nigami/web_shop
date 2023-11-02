@@ -61,6 +61,12 @@ class DataBase:
             await db.execute(F"UPDATE users SET orders = {order} WHERE id = {tg_id}")
             await db.commit()
             
+    #работа с категориями
+    async def get_categories(self):
+        async with aiosqlite.connect(self.db_name) as db:
+            async with db.execute("SELECT DISTINCT category FROM products") as cursor:
+                categories = await cursor.fetchall()
+                return categories
             
 db = DataBase(r'fullstack\db.sqlite3')
 bot_db = DataBase(r'fullstack/bot/db.sqlite3')
