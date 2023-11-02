@@ -7,7 +7,7 @@ async def main():
     try:
         assert orders == result
         print(f'{orders} == {result}')
-    except:
+    except AssertionError:
         print(f'{orders} != {result}')
     
 if __name__ == '__main__':
