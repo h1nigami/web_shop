@@ -41,5 +41,26 @@ class DataBase:
                 token = await cursor.fetchone()
                 return token
             
+    #работа с ордерами //TODO
+    async def get_order_history(self, tg_id):
+        '''
+        возвращает список заказов пользователя в формате заказ:заказ1:заказ2 для обработки используй split(':')
+        '''
+        async with aiosqlite.connect(self.db_name) as db:
+            async with db.execute("SELECT orders FROM users WHERE id = ?", (tg_id,)) as cursor:
+                order = await cursor.fetchone()
+                return order
+            
+    async def create_order(self, tg_id:int, order:str):
+        pre_orders = await self.get_order_history(tg_id)
+        if pre_orders is None:
+            order = order
+        else:
+            order = pre_orders + ':' + order
+        async with aiosqlite.connect(self.db_name) as db:
+            await db.execute(F"UPDATE users SET orders = {order} WHERE id = {tg_id}")
+            await db.commit()
+            
+            
 db = DataBase(r'fullstack\db.sqlite3')
 bot_db = DataBase(r'fullstack/bot/db.sqlite3')
