@@ -26,7 +26,8 @@ async def startup(message:types.Message):
     
 @dp.callback_query(F.data == 'catalog')
 async def catalog(callback: types.callback_query):
-    await bot.send_message(chat_id=callback.from_user.id, text='Выберите категорию товара', reply_markup=catalog_menu())
+    categories = await bot_db.get_categories()
+    await bot.send_message(chat_id=callback.from_user.id, text='Выберите категорию товара', reply_markup=catalog_menu(categories=categories))
     
 @dp.callback_query(F.data == 'profile')
 async def about(callback: types.callback_query):
@@ -41,5 +42,5 @@ async def about(callback: types.callback_query):
         orders_count = 1
     registration = await bot_db.get_user_registration_date(tg_id=callback.from_user.id)
     return await bot.send_message(chat_id=callback.from_user.id,
-                                  text=f'ID: {callback.from_user.id}\nБаланс: {balance}\nПерсональная скидка: {discount}\nВсего покупок: {orders_count}\nРегистрация: {registration}',
+                                  text=f'ID: {callback.from_user.id}\nБаланс: {balance}\nПерсональная скидка: {discount}%\nВсего покупок: {orders_count}\nРегистрация: {registration}',
                                   reply_markup=about_menu())
