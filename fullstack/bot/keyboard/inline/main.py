@@ -14,8 +14,7 @@ def main_menu():
         keyboard.button(text=key, callback_data=value)
     return keyboard.as_markup()
 
-def catalog_menu():
-    categories = await bot_db.get_categories()
+def catalog_menu(categories:tuple):
     keyboard = InlineKeyboardBuilder()
     for category in categories:
         keyboard.button(text=category, callback_data=category)
