@@ -13,7 +13,8 @@ class DataBase:
                 balance INTEGER,
                 discard INTEGER,
                 register_date TEXT,
-                orders TEXT DEFAULT NULL)""")
+                orders TEXT DEFAULT NULL,
+                cart TEXT DEFAULT NULL)""")
             await db.execute("""CREATE TABLE IF NOT EXISTS products(
                 name TEXT,
                 cost INTEGER,
@@ -24,7 +25,7 @@ class DataBase:
     async def create_user(self, tg_id, username):
         try:
             async with aiosqlite.connect(self.db_name) as db:
-                await db.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", (tg_id, username, 0, 0, str(datetime.datetime.now()), None))
+                await db.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)", (tg_id, username, 0, 0, str(datetime.datetime.now()), None, None))
                 await db.commit()
         except aiosqlite.IntegrityError:
             pass
@@ -52,6 +53,21 @@ class DataBase:
             async with db.execute("SELECT register_date FROM users WHERE id = ?", (tg_id,)) as cursor:
                 date = await cursor.fetchone()
                 return date[0]
+    
+    #TODO
+    async def get_user_cart(self, tg_id:int):
+        async with aiosqlite.connect(self.db_name) as db:
+            async with db.execute("SELECT cart FROM users WHERE id = ?", (tg_id,)) as cursor:
+                cart = await cursor.fetchone()
+                return ':'.join(cart)
+    
+    async def update_user_cart(self, tg_id:int, order:str):
+        cart_history = await self.get_user_cart(tg_id)
+        if len(cart_history) == 0: order = order
+        else: order = cart_history + ':' + order
+        async with aiosqlite.connect(self.db_name) as db:
+            await db.execute("UPDATE users SET cart = ? WHERE id = ?", (order, tg_id))
+            await db.commit()
             
     #работа с ботами (только в основной бд)        
     async def get_token(self, owner_id):
@@ -68,9 +84,10 @@ class DataBase:
         async with aiosqlite.connect(self.db_name) as db:
             async with db.execute("SELECT orders FROM users WHERE id = ?", (tg_id,)) as cursor:
                 orders = await cursor.fetchone()
-                order = [order for order in orders]
-                for word in order:
-                    result = ''.join(word)
+                order_ = [order for order in orders]
+                if None in order_:
+                    return ''
+                result = ''.join(order_)
                 return result
             
     async def create_order(self, tg_id:int, order:str):
