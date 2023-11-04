@@ -26,3 +26,18 @@ async def startup(message:types.Message):
 @dp.callback_query(F.data == 'catalog')
 async def catalog(callback: types.callback_query):
     await bot.send_message(chat_id=callback.from_user.id, text='Выберите категорию товара', reply_markup=catalog_menu())
+    
+@dp.callback_query(F.data == 'profile')
+async def about(callback: types.callback_query):
+    balance = await bot_db.get_user_balance(tg_id=callback.from_user.id)
+    discount = await bot_db.get_user_discard(tg_id=callback.from_user.id)
+    _ = await bot_db.get_order_history(tg_id=callback.from_user.id)
+    if ':' in _:
+        orders_count = _.count(':') + 1
+    elif _ == '':
+        orders_count = 0
+    else:
+        orders_count = 1
+    registration = await bot_db.get_user_registration_date(tg_id=callback.from_user.id)
+    return await bot.send_message(chat_id=callback.from_user.id,
+                                  text=f'ID: {callback.from_user.id}\nБаланс: {balance}\nПерсональная скидка: {discount}\nВсего покупок: {orders_count}\nРегистрация: {registration}')

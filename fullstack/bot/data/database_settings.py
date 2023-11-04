@@ -33,7 +33,26 @@ class DataBase:
         async with aiosqlite.connect(self.db_name) as db:
             async with db.execute("SELECT * FROM users WHERE username = ?", (username,)) as cursor:
                 user = await cursor.fetchone()
-                return user
+                return user[0]
+    
+    async def get_user_balance(self, tg_id:int):
+        async with aiosqlite.connect(self.db_name) as db:
+            async with db.execute("SELECT balance FROM users WHERE id = ?", (tg_id,)) as cursor:
+                balance = await cursor.fetchone()
+                return balance[0]
+    
+    async def get_user_discard(self, tg_id:int):
+        async with aiosqlite.connect(self.db_name) as db:
+            async with db.execute("SELECT discard FROM users WHERE id = ?", (tg_id,)) as cursor:
+                discard = await cursor.fetchone()
+                return discard[0]
+            
+    async def get_user_registration_date(self, tg_id:int):
+        async with aiosqlite.connect(self.db_name) as db:
+            async with db.execute("SELECT register_date FROM users WHERE id = ?", (tg_id,)) as cursor:
+                date = await cursor.fetchone()
+                return date[0]
+            
     #работа с ботами (только в основной бд)        
     async def get_token(self, owner_id):
         async with aiosqlite.connect(self.db_name) as db:

@@ -1,4 +1,5 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from data import bot_db
 
 def main_menu():
     keyboard = InlineKeyboardBuilder()
@@ -14,5 +15,7 @@ def main_menu():
     return keyboard.as_markup()
 
 def catalog_menu():
-    #TODO
-    pass
+    categories = await bot_db.get_categories()
+    keyboard = InlineKeyboardBuilder()
+    for category in categories:
+        keyboard.button(text=category, callback_data=category)
