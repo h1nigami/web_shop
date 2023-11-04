@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 router = Router()
 
+@dp.callback_query(F.data == 'main_menu')
 @dp.message(Command(commands=['start']))
 async def startup(message:types.Message):
     await bot_db.create_user(tg_id=message.from_user.id, username=message.from_user.username)
@@ -40,4 +41,5 @@ async def about(callback: types.callback_query):
         orders_count = 1
     registration = await bot_db.get_user_registration_date(tg_id=callback.from_user.id)
     return await bot.send_message(chat_id=callback.from_user.id,
-                                  text=f'ID: {callback.from_user.id}\nБаланс: {balance}\nПерсональная скидка: {discount}\nВсего покупок: {orders_count}\nРегистрация: {registration}')
+                                  text=f'ID: {callback.from_user.id}\nБаланс: {balance}\nПерсональная скидка: {discount}\nВсего покупок: {orders_count}\nРегистрация: {registration}',
+                                  reply_markup=about_menu())
