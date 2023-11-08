@@ -15,7 +15,7 @@ router = Router()
 
 @dp.callback_query(F.data == 'main_menu')
 @dp.message(Command(commands=['start']))
-async def startup(message:types.Message):
+async def startup(message):
     await bot_db.create_user(tg_id=message.from_user.id, username=message.from_user.username)
     photo = types.FSInputFile(path=r'fullstack/bot/src/img/магазин.jpg')
     await bot.send_photo(photo=photo, 
