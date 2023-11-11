@@ -105,7 +105,8 @@ class DataBase:
         async with aiosqlite.connect(self.db_name) as db:
             async with db.execute("SELECT DISTINCT category FROM products") as cursor:
                 categories = await cursor.fetchall()
-                return categories
+                category_list = [category[0] for category in categories]
+                return category_list
             
 db = DataBase(r'fullstack\db.sqlite3')
 bot_db = DataBase(r'fullstack/bot/db.sqlite3')
